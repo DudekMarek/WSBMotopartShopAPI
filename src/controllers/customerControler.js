@@ -48,4 +48,25 @@ async function remove(req, res, next) {
     });
 }
 
-export { get, create };
+async function update(req, res, next) {
+  const customerId = req.params.id;
+  const updatedCustomer = req.body;
+
+  Customer.findByPk(customerId)
+    .then((customer) => {
+      if (!customer) {
+        res.code(404).json({ message: "Customer not found" });
+      } else {
+        return customer.update();
+      }
+    })
+    .then(() => {
+      res.json(updatedCustomer);
+    })
+    .catch((err) => {
+      console.error(`Error while updating customer: ${err}`);
+      res.status(500).json({ error: err });
+    });
+}
+
+export { get, create, remove, update };
