@@ -1,29 +1,33 @@
-import express from 'express'
-import bodyParser from 'body-parser'
+import express from "express";
+import bodyParser from "body-parser";
 
-import sequelize from './src/services/dbService.js'
-import userRouter from './src/routes/userRoute.js'
+import sequelize from "./src/services/dbService.js";
+import userRouter from "./src/routes/userRoute.js";
+import customerRouter from "./src/routes/customerRoute.js";
 
-const app = express()
-const PORT = process.env.PORT || 3000
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
-app.get('/', (req, res) => {
-    res.json({
-        'message': 'API works'
-    })
-})
+app.get("/", (req, res) => {
+  res.json({
+    message: "API works",
+  });
+});
 
+app.use("/user", userRouter);
+app.use("/customer", customerRouter);
 
-app.use('/user', userRouter)
+sequelize
+  .sync({ force: true })
+  .then(() => {
+    console.log("Sync succesfully");
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
-sequelize.sync({alter: true}).then(() => {
-    console.log("Sync succesfully")
-}).catch((err) => {
-    console.log(err)
-})
-
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`App is running on http://localhost:${PORT}`)
-})
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`App is running on http://localhost:${PORT}`);
+});
