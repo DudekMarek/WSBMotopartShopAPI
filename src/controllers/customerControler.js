@@ -7,14 +7,14 @@ async function get(req, res, next) {
     })
     .catch((err) => {
       console.error(`Error fetching users: ${err}`);
-      res.code(500).json({ error: err });
+      res.status(500).json({ error: err });
     });
 }
 
 async function create(req, res, next) {
   const customer = req.body;
   if (!customer || !customer.firstName || !customer.lastName) {
-    res.code(400).json({ error: "Incomplete or invalid customer data" });
+    res.status(400).json({ error: "Incomplete or invalid customer data" });
   }
 
   Customer.create(customer)
@@ -22,7 +22,7 @@ async function create(req, res, next) {
       res.json({ message: "Customer created", customer: customer });
     })
     .catch((err) => {
-      res.code(500).json({ error: err });
+      res.status(500).json({ error: err });
     });
 }
 
@@ -32,7 +32,7 @@ async function remove(req, res, next) {
   Customer.findByPk(customerId)
     .then((customer) => {
       if (!customer) {
-        res.code(404).json({ error: "Customer not found" });
+        res.status(404).json({ error: "Customer not found" });
       } else {
         return customer.destroy();
       }
@@ -55,7 +55,7 @@ async function update(req, res, next) {
   Customer.findByPk(customerId)
     .then((customer) => {
       if (!customer) {
-        res.code(404).json({ message: "Customer not found" });
+        res.status(404).json({ message: "Customer not found" });
       } else {
         return customer.update();
       }
