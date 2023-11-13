@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../services/dbService.js";
 
-const Categories = sequelize.define("Categories", {
+const Category = sequelize.define("Category", {
   categoryName: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -9,4 +9,4 @@ const Categories = sequelize.define("Categories", {
   },
 });
 
-export default Categories;
+export default Category;

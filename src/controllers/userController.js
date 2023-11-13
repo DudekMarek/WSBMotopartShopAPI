@@ -1,6 +1,9 @@
 import User from "../models/userModel.js";
+import { validateOrReject } from "class-validator"
+import { plainToInstance } from "class-transformer"
+import {CreateUser} from "../schemas/userSchema.js"
 
-async function get(req, res, next) {
+function get(req, res, next) {
   User.findAll()
     .then((users) => {
       res.json(users);
@@ -11,26 +14,34 @@ async function get(req, res, next) {
     });
 }
 
-async function create(req, res, next) {
-  const user = req.body;
+function create(req, res, next) {
+  const user = plainToInstance(CreateUser, req.body)
+  validateOrReject(user)
+    .then((obj) => console.log(obj))
+    .catch((err) => {console.error(`Error while creating user ${err}`)});
 
-  if (!user || !user.username || !user.password || !user.userType) {
-    return res.status(400).json({ error: "Incomplete or invalid user data" });
-  }
-  User.create(user)
-    .then((user) => {
-      res.json({
-        message: `User created`,
-        user: user,
-      });
-    })
-    .catch((err) => {
-      console.error(`Error while updating creating: ${err}`);
-      res.json({ error: err });
-    });
+
+
+
+
+
+  // if (!user || !user.username || !user.password || !user.userType) {
+  //   return res.status(400).json({ error: "Incomplete or invalid user data" });
+  // }
+  // User.create(user)
+  //   .then((user) => {
+  //     res.json({
+  //       message: `User created`,
+  //       user: user,
+  //     });
+  //   })
+  //   .catch((err) => {
+  //     console.error(`Error while updating creating: ${err}`);
+  //     res.json({ error: err });
+  //   });
 }
 
-async function remove(req, res, next) {
+function remove(req, res, next) {
   const userId = req.params.id;
   User.findByPk(userId)
     .then((user) => {
@@ -49,7 +60,7 @@ async function remove(req, res, next) {
     });
 }
 
-async function update(req, res, next) {
+function update(req, res, next) {
   const userId = req.params.id;
   const updatedUser = req.body;
 

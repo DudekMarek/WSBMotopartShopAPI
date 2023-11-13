@@ -1,24 +1,24 @@
-import Categories from "../models/categoriesModel.js";
+import Category from "../models/categoryModel.js";
 
-async function get(req, res, next) {
-  Categories.findAll()
-    .then((categories) => {
-      res.json(categories);
+function get(req, res, next) {
+  Category.findAll()
+    .then((Category) => {
+      res.json(Category);
     })
     .catch((err) => {
-      console.error(`Error fetching categories: ${err}`);
+      console.error(`Error fetching Category: ${err}`);
       res.status(500).json({ error: err });
     });
 }
 
-async function create(req, res, nest) {
+function create(req, res, nest) {
   const newCategory = req.body;
 
   if (!newCategory || !newCategory.categoryName) {
     res.status(400).json({ error: "Incomplete or invalid category data" });
   }
 
-  Categories.create(newCategory)
+  Category.create(newCategory)
     .then((newCategory) => {
       res.json(newCategory);
     })
@@ -27,10 +27,10 @@ async function create(req, res, nest) {
     });
 }
 
-async function remove(req, res, next) {
+function remove(req, res, next) {
   const categoryId = req.params.id;
 
-  Categories.findByPk(categoryId)
+  Category.findByPk(categoryId)
     .then((category) => {
       if (!category) {
         res.status(404).json({ error: "Customer not found" });
@@ -49,11 +49,11 @@ async function remove(req, res, next) {
     });
 }
 
-async function update(req, res, next) {
+function update(req, res, next) {
   const categoryId = req.params.id;
   const updatedCategory = req.body;
 
-  Categories.findByPk(categoryId)
+  Category.findByPk(categoryId)
     .then((category) => {
       if (!category) {
         res.status(404).json({ error: "Category not found" });

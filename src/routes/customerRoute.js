@@ -1,14 +1,14 @@
 import express from "express";
-import * as customerControler from "../controllers/customerControler.js";
+import * as customerController from "../controllers/customerController.js";
 
 const customerRouter = express.Router();
 
-customerRouter.get("/", customerControler.get);
+customerRouter.get("/", customerController.get);
 
-customerRouter.post("/", customerControler.create);
+customerRouter.post("/", customerController.create);
 
-customerRouter.delete("/:id", customerControler.remove);
+customerRouter.delete("/:id", customerController.remove);
 
-customerRouter.param("/:id", customerControler.update);
+customerRouter.param("/:id", customerController.update);
 
 export default customerRouter;

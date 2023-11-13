@@ -2,9 +2,9 @@ import express from "express";
 import bodyParser from "body-parser";
 
 import sequelize from "./src/services/dbService.js";
-import userRouter from "./src/routes/userRoute.js";
-import customerRouter from "./src/routes/customerRoute.js";
-import categoriesRouter from "./src/routes/categoriesRoute.js";
+
+import * as models from "./src/models/index.js";
+import router from "./src/routes/index.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -17,11 +17,9 @@ app.get("/", (req, res) => {
   });
 });
 
-app.use("/user", userRouter);
-app.use("/customer", customerRouter);
-app.use("/categories", categoriesRouter);
+app.use(router);
 
-sequelize
+await sequelize
   .sync({ alter: true })
   .then(() => {
     console.log("Sync succesfully");

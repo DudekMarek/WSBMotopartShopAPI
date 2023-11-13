@@ -1,6 +1,6 @@
 import Customer from "../models/customerModel.js";
 
-async function get(req, res, next) {
+function get(req, res, next) {
   Customer.findAll()
     .then((customers) => {
       res.json(customers);
@@ -11,7 +11,7 @@ async function get(req, res, next) {
     });
 }
 
-async function create(req, res, next) {
+function create(req, res, next) {
   const customer = req.body;
   if (!customer || !customer.firstName || !customer.lastName) {
     res.status(400).json({ error: "Incomplete or invalid customer data" });
@@ -26,7 +26,7 @@ async function create(req, res, next) {
     });
 }
 
-async function remove(req, res, next) {
+function remove(req, res, next) {
   const customerId = req.params.id;
 
   Customer.findByPk(customerId)
@@ -48,7 +48,7 @@ async function remove(req, res, next) {
     });
 }
 
-async function update(req, res, next) {
+function update(req, res, next) {
   const customerId = req.params.id;
   const updatedCustomer = req.body;
 
