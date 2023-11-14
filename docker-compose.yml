@@ -17,3 +17,5 @@ services:
       POSTGRES_PASSWORD: root
       POSTGRES_USER: root
       POSTGRES_DB: test
+volumes:
+  my_volume:

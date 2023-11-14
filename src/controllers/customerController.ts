@@ -1,6 +1,7 @@
-import Customer from "../models/customerModel.js";
+import { Request, Response } from "express";
+import Customer from "../models/customerModel";
 
-function get(req, res, next) {
+function get(req: Request, res: Response) {
   Customer.findAll()
     .then((customers) => {
       res.json(customers);
@@ -11,7 +12,7 @@ function get(req, res, next) {
     });
 }
 
-function create(req, res, next) {
+function create(req: Request, res: Response) {
   const customer = req.body;
   if (!customer || !customer.firstName || !customer.lastName) {
     res.status(400).json({ error: "Incomplete or invalid customer data" });
@@ -26,7 +27,7 @@ function create(req, res, next) {
     });
 }
 
-function remove(req, res, next) {
+function remove(req: Request, res: Response) {
   const customerId = req.params.id;
 
   Customer.findByPk(customerId)
@@ -48,7 +49,7 @@ function remove(req, res, next) {
     });
 }
 
-function update(req, res, next) {
+function update(req: Request, res: Response) {
   const customerId = req.params.id;
   const updatedCustomer = req.body;
 
@@ -57,7 +58,7 @@ function update(req, res, next) {
       if (!customer) {
         res.status(404).json({ message: "Customer not found" });
       } else {
-        return customer.update();
+        // return customer.update();
       }
     })
     .then(() => {

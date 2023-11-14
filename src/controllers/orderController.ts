@@ -1,6 +1,7 @@
-import Order from "../models/orderModel.js";
+import { Request, Response } from "express";
+import Order from "../models/orderModel";
 
-function get(req, res, next) {
+function get(req: Request, res: Response) {
     Order.findAll()
     .then((orders) => {
       res.json(orders);
@@ -9,6 +10,10 @@ function get(req, res, next) {
       console.error(`Error fetching orders: ${err}`);
       res.status(500).json({ error: err });
     });
+}
+
+function create(req: Request, res: Response){
+  
 }
 
 // async function create(req, res, next) {

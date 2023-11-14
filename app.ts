@@ -1,17 +1,17 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
 
-import sequelize from "./src/services/dbService.js";
-
-import * as models from "./src/models/index.js";
-import router from "./src/routes/index.js";
+import "dotenv/config";
+import router from "./src/routes";
+import sequelize from "./src/services/dbService";
+import * as models from "./src/models";
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 
 app.use(bodyParser.json());
 
-app.get("/", (req, res) => {
+app.get("/", (req: Request, res: Response) => {
   res.json({
     message: "API works",
   });
@@ -19,7 +19,7 @@ app.get("/", (req, res) => {
 
 app.use(router);
 
-await sequelize
+sequelize
   .sync({ alter: true })
   .then(() => {
     console.log("Sync succesfully");

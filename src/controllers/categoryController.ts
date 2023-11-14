@@ -1,6 +1,7 @@
-import Category from "../models/categoryModel.js";
+import { Request, Response } from "express";
+import Category from "../models/categoryModel";
 
-function get(req, res, next) {
+function get(req: Request, res: Response) {
   Category.findAll()
     .then((Category) => {
       res.json(Category);
@@ -11,7 +12,7 @@ function get(req, res, next) {
     });
 }
 
-function create(req, res, nest) {
+function create(req: Request, res: Response) {
   const newCategory = req.body;
 
   if (!newCategory || !newCategory.categoryName) {
@@ -27,7 +28,7 @@ function create(req, res, nest) {
     });
 }
 
-function remove(req, res, next) {
+function remove(req: Request, res: Response) {
   const categoryId = req.params.id;
 
   Category.findByPk(categoryId)
@@ -49,7 +50,7 @@ function remove(req, res, next) {
     });
 }
 
-function update(req, res, next) {
+function update(req: Request, res: Response) {
   const categoryId = req.params.id;
   const updatedCategory = req.body;
 

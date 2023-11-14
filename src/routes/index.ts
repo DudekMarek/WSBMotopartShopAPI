@@ -1,8 +1,8 @@
 import express from "express"
-import categoryRouter from "./categoryRoute.js";
-import userRouter from "./userRoute.js";
-import customerRouter from "./customerRoute.js";
-import orderRouter from "./orderRoute.js";
+import categoryRouter from "./categoryRoute";
+import userRouter from "./userRoute";
+import customerRouter from "./customerRoute";
+import orderRouter from "./orderRoute";
 
 const router = express.Router();
 

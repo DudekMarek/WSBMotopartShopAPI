@@ -2,23 +2,28 @@ import {DataTypes, Model, CreationOptional, InferAttributes, InferCreationAttrib
 import sequelize from '../services/dbService'
 
 
-class Category extends Model <InferAttributes<Category>, InferCreationAttributes<Category>> {
-  declare categoryName: string;
+class Customer extends Model <InferAttributes<Customer>, InferCreationAttributes<Customer>> {
+  declare firstName: string;
+  declare lastName: string;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
 
 
-Category.init({
-  categoryName: {
+Customer.init({
+  firstName: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  lastName: {
     type: DataTypes.STRING,
     allowNull: false,
   },
   createdAt: DataTypes.DATE,
   updatedAt: DataTypes.DATE,
 }, {
-  tableName: "categories",
+  tableName: "customers",
   sequelize
 })
 
-export default Category;
+export default Customer;

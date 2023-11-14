@@ -1,9 +1,10 @@
-import User from "../models/userModel.js";
+import { Request, Response } from "express";
+import User from "../models/userModel";
 import { validateOrReject } from "class-validator"
 import { plainToInstance } from "class-transformer"
-import {CreateUser} from "../schemas/userSchema.js"
+import {CreateUser} from "../schemas/userSchema"
 
-function get(req, res, next) {
+function get(req: Request, res: Response) {
   User.findAll()
     .then((users) => {
       res.json(users);
@@ -14,16 +15,11 @@ function get(req, res, next) {
     });
 }
 
-function create(req, res, next) {
+function create(req: Request, res: Response) {
   const user = plainToInstance(CreateUser, req.body)
   validateOrReject(user)
     .then((obj) => console.log(obj))
     .catch((err) => {console.error(`Error while creating user ${err}`)});
-
-
-
-
-
 
   // if (!user || !user.username || !user.password || !user.userType) {
   //   return res.status(400).json({ error: "Incomplete or invalid user data" });
@@ -41,7 +37,7 @@ function create(req, res, next) {
   //   });
 }
 
-function remove(req, res, next) {
+function remove(req: Request, res: Response) {
   const userId = req.params.id;
   User.findByPk(userId)
     .then((user) => {
@@ -60,7 +56,7 @@ function remove(req, res, next) {
     });
 }
 
-function update(req, res, next) {
+function update(req: Request, res: Response) {
   const userId = req.params.id;
   const updatedUser = req.body;
 

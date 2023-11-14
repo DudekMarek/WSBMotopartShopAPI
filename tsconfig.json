@@ -1,12 +1,25 @@
 {
+  "compilerOptions": {
+    "esModuleInterop": true,
+  },
+  "ts-node": {
+    "esm": true,
     "compilerOptions": {
-      "module": "system",
-      "noImplicitAny": true,
-      "removeComments": true,
-      "preserveConstEnums": true,
-      "outFile": "./built/local/tsc.js",
-      "sourceMap": true
-    },
-    "include": ["src/**/*"],
-    "exclude": ["**/*.spec.ts"]
-  }
+      "target": "ES5",
+      "module": "System",
+      "moduleResolution": "Bundler",
+      "sourceMap": true,
+      "outDir": "./dist",
+      "rootDir": ".",
+      "strict": true,
+      "esModuleInterop": true,
+      // For schemas to work properly
+      "strictPropertyInitialization": true,
+      "experimentalDecorators": true,
+      "noEmit": true,
+      "allowImportingTsExtensions": true,
+    }
+  },
+  "include": ["**/*"],
+  "exclude": ["node_modules"]
+}
