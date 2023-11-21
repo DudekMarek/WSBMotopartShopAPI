@@ -9,6 +9,6 @@ customerRouter.post("/", customerController.create);
 
 customerRouter.delete("/:id", customerController.remove);
 
-customerRouter.param("/:id", customerController.update);
+customerRouter.patch("/:id", customerController.update);
 
 export default customerRouter;

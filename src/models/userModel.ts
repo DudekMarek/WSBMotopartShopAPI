@@ -5,7 +5,7 @@ import sequelize from "../services/dbService";
 type ALLOWED_USER_TYPES = "sealsperson" | "warehouseman" | "serviceTechnican" | "customer"
 
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
-  declare userName: string;
+  declare username: string;
   declare password: string;
   declare userType: ALLOWED_USER_TYPES
   declare createdAt: CreationOptional<Date>;
@@ -13,7 +13,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
 }
 
 User.init({
-  userName: {
+  username: {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true
@@ -23,7 +23,7 @@ User.init({
     allowNull: false
   },
   userType: {
-    type: DataTypes.STRING,
+    type: DataTypes.ENUM<ALLOWED_USER_TYPES>("sealsperson", "warehouseman", "serviceTechnican", "customer"),
     allowNull: false
   },
   createdAt: DataTypes.DATE,
@@ -34,31 +34,3 @@ User.init({
 })
 
 export default User;
-
-// const allowedUserTypes = [
-//   "sealsperson",
-//   "warehouseman",
-//   "serviceTechnican",
-//   "customer",
-// ];
-//
-// const User = sequelize.define("User", {
-//   username: {
-//     type: DataTypes.STRING,
-//     allowNull: false,
-//     unique: true,
-//   },
-//   password: {
-//     type: DataTypes.STRING,
-//     allowNull: false,
-//   },
-//   userType: {
-//     type: DataTypes.STRING,
-//     validate: {
-//       isIn: {
-//         args: [allowedUserTypes],
-//         msg: `uerType must be one of: ${allowedUserTypes}`,
-//       },
-//     },
-//   },
-// });

@@ -1,4 +1,4 @@
-import { IsNotEmpty,IsString, MinLength, IsIn } from "class-validator";
+import { IsNotEmpty, IsString, MinLength, IsIn } from "class-validator";
 
 type T_ALLOWED_USER_TYPES = "sealsperson" | "warehouseman" | "serviceTechnican" | "customer";
 
@@ -9,12 +9,10 @@ const ALLOWED_USER_TYPES = [
     "customer",
 ];
 
-export class CreateUser {
+export default class CreateUser {
     @IsNotEmpty()
     @IsString()
-    @MinLength(3, {
-        message: "Username needs to contain at least 3 characters"
-    })
+    @MinLength(3, { message: "Username needs to contain at least 3 characters" })
     username: string;
 
     @IsNotEmpty()
@@ -28,4 +26,8 @@ export class CreateUser {
     userType: T_ALLOWED_USER_TYPES;
 }
 
-export default CreateUser;
+class UpdateUser extends CreateUser {
+    // You can add additional properties specific to updating a user if needed
+}
+
+export { CreateUser, UpdateUser };

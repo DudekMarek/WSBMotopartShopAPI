@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 
 app.get("/", (req: Request, res: Response) => {
   res.json({
-    message: "API works",
+    message: "API works!$!",
   });
 });
 

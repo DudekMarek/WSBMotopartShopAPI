@@ -4,10 +4,9 @@
   "description": "",
   "main": "app.ts",
   "type": "module",
-  
-  "scripts": {
-    "start": "npx nodemon"
-  },
+    "scripts": {
+      "start": "nodemon"
+    },
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -19,10 +18,6 @@
     "nodemon": "^3.0.1",
     "pg": "^8.11.3",
     "sequelize": "^6.34.0"
-  },
-  "nodemonConfig": {
-    "legacyWatch": true,
-    "exec": "node --loader ts-node/esm ./app.ts"
   },
   "devDependencies": {
     "@types/body-parser": "^1.19.5",

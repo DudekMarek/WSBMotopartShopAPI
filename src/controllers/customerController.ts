@@ -1,73 +1,79 @@
 import { Request, Response } from "express";
 import Customer from "../models/customerModel";
+import { validateOrReject } from "class-validator";
+import { isValidationError } from "../helpers/validation";
+import { plainToInstance } from "class-transformer";
+import { CreateCustomer, UpdateCustomer } from "../schemas/customerSchema";
+import { UniqueConstraintError } from "sequelize";
 
-function get(req: Request, res: Response) {
-  Customer.findAll()
-    .then((customers) => {
-      res.json(customers);
-    })
-    .catch((err) => {
-      console.error(`Error fetching users: ${err}`);
-      res.status(500).json({ error: err });
-    });
-}
-
-function create(req: Request, res: Response) {
-  const customer = req.body;
-  if (!customer || !customer.firstName || !customer.lastName) {
-    res.status(400).json({ error: "Incomplete or invalid customer data" });
+async function get(req: Request, res: Response) {
+  try {
+    const customers = await Customer.findAll();
+    res.json(customers);
+  } catch(err) {
+    console.error(`Error fetching customers: ${err}`);
+    res.status(500).json({ error: err });
   }
-
-  Customer.create(customer)
-    .then((customer) => {
-      res.json({ message: "Customer created", customer: customer });
-    })
-    .catch((err) => {
-      res.status(500).json({ error: err });
-    });
 }
 
-function remove(req: Request, res: Response) {
-  const customerId = req.params.id;
-
-  Customer.findByPk(customerId)
-    .then((customer) => {
-      if (!customer) {
-        res.status(404).json({ error: "Customer not found" });
-      } else {
-        return customer.destroy();
-      }
-    })
-    .then(() => {
-      res
-        .status(200)
-        .json({ message: `Customer with Id: ${customerId} deleted` });
-    })
-    .catch((err) => {
-      console.error(`Error while deleting customer: ${err}`);
-      res.status(500).json({ error: err });
-    });
+async function create(req: Request, res: Response) {
+  try {
+  const customer = plainToInstance(CreateCustomer, req.body);
+  await validateOrReject(customer);
+  const createdCustomer = await Customer.create({
+    ...customer,
+  });
+  res.status(201).send(createdCustomer);
+  } catch(err) {
+    if (isValidationError(err)) {
+    res.status(400).send({ error: 'Validation error', details: err });
+    } else if (err instanceof UniqueConstraintError) {
+    res.status(409).send({ error: 'Customer with this name already exists' });
+    } else {
+    console.error('Error while creating customer:', err);
+    res.status(500).send({ error: 'Internal server error' });
+    }
+  }
 }
 
-function update(req: Request, res: Response) {
+async function remove(req: Request, res: Response) {
+  try {
   const customerId = req.params.id;
-  const updatedCustomer = req.body;
+  const customer = await Customer.findByPk(customerId);
+  if (!customer) {
+    res.status(404).json({error: "Customer not found"});
+  } else {
+    await customer.destroy();
+    res.status(200).json({message: `Customer with Id: ${customerId} deleted`});
+  }} catch(err) {
+    console.error(`Error while deleting customer: ${err}`);
+    res.status(500).json({error: err});
+  }
+}
 
-  Customer.findByPk(customerId)
-    .then((customer) => {
-      if (!customer) {
-        res.status(404).json({ message: "Customer not found" });
-      } else {
-        // return customer.update();
-      }
-    })
-    .then(() => {
-      res.json(updatedCustomer);
-    })
-    .catch((err) => {
-      console.error(`Error while updating customer: ${err}`);
-      res.status(500).json({ error: err });
+async function update(req: Request, res: Response) {
+  try {
+  const customerId = req.params.id;
+  const existingCustomer = await Customer.findByPk(customerId);
+  const customer = plainToInstance(UpdateCustomer, req.body);
+  await validateOrReject(customer);
+  if (!existingCustomer) {
+    res.status(404).json({error: "Customer not found"});
+  } else {
+    await existingCustomer.update({
+      ...customer
     });
+    res.status(200).json({message: `Customer with Id: ${customerId} updated`});
+  }} catch(err) {
+    if (isValidationError(err)) {
+    res.status(400).send({ error: 'Validation error', details: err });
+    } else if (err instanceof UniqueConstraintError) {
+    res.status(409).send({ error: 'Customer with this name already exists' });
+    } else {
+    console.error('Error while updating customer:', err);
+    res.status(500).send({ error: 'Internal server error' });
+    }
+  }
 }
 
 export { get, create, remove, update };

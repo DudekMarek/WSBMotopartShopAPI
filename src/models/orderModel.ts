@@ -1,12 +1,11 @@
 import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional } from "sequelize";
 
-import sequelize from "../services/dbService.js";
-import Customer from "./customerModel.js";
-
+import sequelize from "../services/dbService";
+import Customer from "./customerModel";
 
 type T_ALLOWED_ORDER_STATUSES = "new" | "processing" | "paid" | "shipped" | "delivered" | "completed" | "cancelled";
 
-const ALLOWED_ORDER_STATUSES = [
+const ALLOWED_ORDER_STATUSES: T_ALLOWED_ORDER_STATUSES[] = [
     "new",
     "processing",
     "paid",
@@ -29,25 +28,20 @@ Order.init({
     orderDate: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
-        allowNull: false
+        allowNull: false,
     },
     status: {
-        type: DataTypes.STRING,
         defaultValue: "new",
+        type: DataTypes.ENUM(...ALLOWED_ORDER_STATUSES),
         allowNull: false,
-        validate: {
-            isIn: {
-                args: [ALLOWED_ORDER_STATUSES],
-                msg: `Status must be one of: ${ALLOWED_ORDER_STATUSES}`,
-            },
-        },
     },
     customerId: {
         type: DataTypes.INTEGER,
         references: {
             model: Customer,
             key: 'id',
-        }
+        },
+        allowNull: false,
     },
     totalCost: {
         type: DataTypes.DECIMAL,
@@ -61,13 +55,4 @@ Order.init({
 });
 
 export default Order;
-
-// const allowedOrderStatuses = [
-//     "new",
-//     "processing",
-//     "paid",
-//     "shipped",
-//     "delivered",
-//     "completed",
-//     "cancelled"
-// ];
+export { T_ALLOWED_ORDER_STATUSES, ALLOWED_ORDER_STATUSES }
