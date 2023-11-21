@@ -28,7 +28,6 @@ async function create(req: Request, res: Response){
       if (isValidationError(err)) {
       res.status(400).send({ error: 'Validation error', details: err });
       } else if (err instanceof UniqueConstraintError) {
-      res.status(409).send({ error: 'Order with this id already exists' });
       } else {
       console.error(`Error while creating order: ${err}`);
       res.status(500).json({ error: err });
@@ -65,8 +64,6 @@ async function update(req: Request, res: Response) {
     }} catch(err) {
     if (isValidationError(err)) {
       res.status(400).send({ error: 'Validation error', details: err });
-    } else if (err instanceof UniqueConstraintError) {
-      res.status(409).send({ error: 'Order with this id already exists' });
     } else {
       console.error(`Error while updating order: ${err}`);
       res.status(500).json({error: err});

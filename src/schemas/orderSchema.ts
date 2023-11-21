@@ -18,6 +18,7 @@ class CreateOrder {
     @IsInt()
     customerId: number;
 
+    @IsNotEmpty()
     @IsNumber()
     totalCost: number;
 

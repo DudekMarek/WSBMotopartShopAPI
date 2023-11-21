@@ -1,13 +1,5 @@
 import { IsNotEmpty, IsString, MinLength, IsIn } from "class-validator";
-
-type T_ALLOWED_USER_TYPES = "sealsperson" | "warehouseman" | "serviceTechnican" | "customer";
-
-const ALLOWED_USER_TYPES = [
-    "sealsperson",
-    "warehouseman",
-    "serviceTechnican",
-    "customer",
-];
+import { ALLOWED_USER_TYPES, T_ALLOWED_USER_TYPES } from "../models/userModel";
 
 export default class CreateUser {
     @IsNotEmpty()

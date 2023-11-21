@@ -70,8 +70,8 @@ async function update(req: Request, res: Response) {
     } else if (err instanceof UniqueConstraintError) {
       res.status(409).send({ error: 'User with this username already exists' });
     } else {
-    console.error(`Error while updating user: ${err}`);
-    res.status(500).json({error: err});
+      console.error(`Error while updating user: ${err}`);
+      res.status(500).json({error: err});
     }
   }
 }

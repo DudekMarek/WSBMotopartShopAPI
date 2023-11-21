@@ -1,5 +1,4 @@
 import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional } from "sequelize";
-
 import sequelize from "../services/dbService";
 import Customer from "./customerModel";
 
@@ -32,16 +31,16 @@ Order.init({
     },
     status: {
         defaultValue: "new",
-        type: DataTypes.ENUM(...ALLOWED_ORDER_STATUSES),
+        type: DataTypes.ENUM<T_ALLOWED_ORDER_STATUSES>(...ALLOWED_ORDER_STATUSES),
         allowNull: false,
     },
     customerId: {
         type: DataTypes.INTEGER,
+        allowNull: false,
         references: {
             model: Customer,
             key: 'id',
         },
-        allowNull: false,
     },
     totalCost: {
         type: DataTypes.DECIMAL,
