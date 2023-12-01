@@ -1,8 +1,7 @@
 // orderSchema.ts
-import { IsInt, IsNotEmpty, IsNumber, IsOptional, IsDate, IsIn, registerDecorator, ValidationOptions, ValidationArguments} from 'class-validator';
+import { IsInt, IsNotEmpty, IsNumber, IsOptional, IsDate, IsIn} from 'class-validator';
 import { ALLOWED_ORDER_STATUSES, T_ALLOWED_ORDER_STATUSES } from "../models/orderModel";
-import { Transform } from 'class-transformer';
-import { TransformFnParams } from 'class-transformer';
+import { Transform, TransformFnParams } from 'class-transformer';
 
 class CreateOrder {
     @IsOptional()
