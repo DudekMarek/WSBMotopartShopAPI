@@ -1,9 +1,39 @@
 // helpers
-import { ValidationError } from "class-validator";
+import { ValidationError, validateOrReject } from "class-validator";
+import { Response } from "express";
+import { UniqueConstraintError } from "sequelize";
 
 // simply checks if the error is an array of ValidationErrors
 export function isValidationError(err: any): err is ValidationError[] {
   return Array.isArray(err) && err[0] instanceof ValidationError;
+}
+
+export class EntityNotFoundError extends Error {
+  constructor(message?: string) {
+    super(message);
+    this.name = 'EntityNotFoundError';
+  }
+}
+
+export async function validateInstance(instance: any) {
+  try {
+    await validateOrReject(instance);
+  } catch (err) {
+    throw err;
+  }
+}
+
+export function handleError(err: any, res: Response) {
+  if (err instanceof UniqueConstraintError) {
+  res.status(409).send({ error: 'Entity with this name already exists' });
+  } else if (isValidationError(err)) {
+    res.status(400).send({ error: 'Validation error', details: err });
+  } else if (err instanceof EntityNotFoundError) {
+    res.status(404).send({ error: 'Entity not found' });
+  } else {
+    console.error('Error:', err);
+    res.status(500).send({ error: 'Internal server error' });
+  }
 }
 
 //TODO: export validation logic from controllers methods to here
