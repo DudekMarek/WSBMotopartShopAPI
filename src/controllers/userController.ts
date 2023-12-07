@@ -1,10 +1,8 @@
 import { Request, Response } from "express";
 import User from "../models/userModel";
-import { validateOrReject } from "class-validator"
-import { EntityNotFoundError, validateInstance, handleError, isValidationError } from "../helpers/validation";
-import { plainToInstance } from "class-transformer"
 import {CreateUser, UpdateUser } from "../schemas/userSchema"
-import { UniqueConstraintError } from "sequelize";
+import { plainToInstance } from "class-transformer"
+import { EntityNotFoundError, validateInstance, handleError } from "../helpers/validation";
 
 
 

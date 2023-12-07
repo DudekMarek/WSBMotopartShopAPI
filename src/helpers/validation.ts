@@ -1,4 +1,4 @@
-// helpers
+// helpers for validation for simplifier the controllers
 import { ValidationError, validateOrReject } from "class-validator";
 import { Response } from "express";
 import { UniqueConstraintError } from "sequelize";
@@ -25,17 +25,13 @@ export async function validateInstance(instance: any) {
 
 export function handleError(err: any, res: Response) {
   if (err instanceof UniqueConstraintError) {
-  res.status(409).send({ error: 'Entity with this name already exists' });
+  res.status(409).send({ error: ` Entity with this ${Object.keys(err.fields)[0]} already exists` });
   } else if (isValidationError(err)) {
     res.status(400).send({ error: 'Validation error', details: err });
   } else if (err instanceof EntityNotFoundError) {
-    res.status(404).send({ error: 'Entity not found' });
+    res.status(404).send({ error: `${err.message}` });
   } else {
     console.error('Error:', err);
     res.status(500).send({ error: 'Internal server error' });
   }
 }
-
-//TODO: export validation logic from controllers methods to here
-//TODO: export error handling logic from controllers methods to here
-//TODO: export error response logic from controllers methods to here
