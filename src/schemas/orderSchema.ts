@@ -14,7 +14,6 @@ class CreateOrder {
     status: T_ALLOWED_ORDER_STATUSES;
 
     @IsNotEmpty()
-    @IsInt()
     customerId: number;
 
     @IsNotEmpty()
