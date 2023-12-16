@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
+import Customer from "../models/customerModel";
 import Order from "../models/orderModel";
 import { CreateOrder, UpdateOrder } from "../schemas/orderSchema";
 import { plainToInstance } from "class-transformer";
-import { EntityNotFoundError, handleError } from "../helpers/validation";
+import { ensureExists, getEntityById } from '../services/relationService'
+import { handleError } from "../helpers/validation";
 
 async function get(req: Request, res: Response) {
   try {
@@ -16,6 +18,8 @@ async function get(req: Request, res: Response) {
 async function create(req: Request, res: Response) {
   try {
     const order = plainToInstance(CreateOrder, req.body);
+    // Ensure customer exists
+    await ensureExists(Customer, order.customerId);
     const createdOrder = await Order.create({ ...order });
     res.status(201).send(createdOrder);
   } catch (err) {
@@ -25,12 +29,10 @@ async function create(req: Request, res: Response) {
 
 async function update(req: Request, res: Response) {
   try {
-    const orderId = req.params.id;
-    const existingOrder = await Order.findByPk(orderId);
-    if (!existingOrder) {
-      throw new EntityNotFoundError("Order not found");
-    }
+    const orderId = parseInt(req.params.id, 10);
+    const existingOrder = await getEntityById(Order, orderId);
     const order = plainToInstance(UpdateOrder, req.body);
+    await ensureExists(Customer, order.customerId);
     const updatedOrder = await existingOrder.update(order);
     res.status(200).send(updatedOrder);
   } catch (err) {
@@ -40,11 +42,8 @@ async function update(req: Request, res: Response) {
 
 async function remove(req: Request, res: Response) {
   try {
-    const orderId = req.params.id;
-    const existingOrder = await Order.findByPk(orderId);
-    if (!existingOrder) {
-      throw new EntityNotFoundError("Order not found");
-    }
+    const orderId = parseInt(req.params.id, 10);
+   const existingOrder = await getEntityById(Order, orderId);
     await existingOrder.destroy();
     res.status(200).json({ message: `Order with ${orderId} deleted` });
   } catch (err) {
