@@ -32,8 +32,7 @@ async function remove(req: Request, res: Response) {
     await existingCategory.destroy();
     res.status(200).json({ message: `Category with id ${categoryId} deleted` });
   } catch(err) {
-    console.error(`Error while deleting category: ${err}`);
-    res.status(500).json({ error: err });
+    handleError(err, res);
   }
 }
 
