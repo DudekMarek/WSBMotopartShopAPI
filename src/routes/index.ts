@@ -7,6 +7,7 @@ import orderRouter from "./orderRoute";
 import inventoryRouter from "./inventoryRoute";
 import orderItemsRouter from "./orderItemsRoute";
 import serviceOrderRouter from "./serviceOrderRoute";
+import servicePartsRouter from "./servicePartsRoute";
 
 const router = express.Router();
 
@@ -18,5 +19,6 @@ router.use("/orders", orderRouter);
 router.use("/inventories", inventoryRouter);
 router.use("/order-items", orderItemsRouter);
 router.use("/service-orders", serviceOrderRouter);
+router.use("/service-parts", servicePartsRouter);
 
 export default router;
