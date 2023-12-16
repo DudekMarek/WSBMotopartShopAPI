@@ -18,7 +18,7 @@ async function get(req: Request, res: Response) {
 async function create(req: Request, res: Response) {
   try {
     const order = plainToInstance(CreateOrder, req.body);
-    validateInstance(order);
+    await validateInstance(order);
     // Ensure customer exists
     await ensureExists(Customer, order.customerId);
     const createdOrder = await Order.create({ ...order });
@@ -33,7 +33,7 @@ async function update(req: Request, res: Response) {
     const orderId = parseInt(req.params.id, 10);
     const existingOrder = await getEntityById(Order, orderId);
     const order = plainToInstance(UpdateOrder, req.body);
-    validateInstance(order);
+    await validateInstance(order);
     await ensureExists(Customer, order.customerId);
     const updatedOrder = await existingOrder.update(order);
     res.status(200).send(updatedOrder);
