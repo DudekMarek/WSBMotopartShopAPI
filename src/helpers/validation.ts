@@ -32,7 +32,8 @@ export async function validateInstance(instance: any) {
 
 export function handleError(err: any, res: Response) {
   if (err instanceof UniqueConstraintError) {
-  res.status(409).send({ error: ` Entity with this ${Object.keys(err.fields)[0]} already exists` });
+    const fieldName = Object.keys(err.fields)[0];
+    res.status(409).send({ error: `Entity with this ${fieldName} already exists` });
   } else if (isValidationError(err)) {
     res.status(400).send({ error: 'Validation error', details: err });
   } else if (err instanceof EntityNotFoundError) {
