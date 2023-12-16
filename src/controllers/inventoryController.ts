@@ -1,75 +1,56 @@
-import { Request, Response } from 'express';
-import Inventory from '../models/inventoryModel';
-import { plainToInstance } from 'class-transformer';
-import { CreateInventory, UpdateInventory } from '../schemas/inventorySchema';
-import { validateOrReject } from 'class-validator';
-import { isValidationError } from '../helpers/validation';
-import { UniqueConstraintError } from 'sequelize';
+import { Request, Response } from "express";
+import Product from "../models/productModel";
+import Inventory from "../models/inventoryModel";
+import { CreateInventory, UpdateInventory } from "../schemas/inventorySchema";
+import { plainToInstance } from "class-transformer";
+import { ensureExists, getEntityById } from "../services/relationService";
+import { validateInstance, handleError } from "../helpers/validation";
 
 async function get(req: Request, res: Response) {
   try {
     const inventory = await Inventory.findAll();
     res.json(inventory);
   } catch (err) {
-    console.error(`Error fetching inventory: ${err}`);
-    res.status(500).json({ error: err });
-  }
+    handleError(err, res);
+  } 
 }
 
 async function create(req: Request, res: Response) {
   try {
     const inventory = plainToInstance(CreateInventory, req.body);
-    await validateOrReject(inventory);
-    const createdInventory = await Inventory.create({
-      ...inventory,
-    });
+    await validateInstance(inventory);
+    // Ensure product exists
+    await ensureExists(Product, inventory.productId);
+    const createdInventory = await Inventory.create({ ...inventory });
     res.status(201).send(createdInventory);
-  } catch (err) {
-    if (isValidationError(err)) {
-      res.status(400).send({ error: 'Validation error', details: err });
-    } else {
-      console.error('Error while creating inventory:', err);
-      res.status(500).send({ error: 'Internal server error' });
-    }
+  } catch(err) {
+    handleError(err, res);
   }
 }
 
 async function remove(req: Request, res: Response) {
-    try {
-        const inventoryId = req.params.id;
-        const inventory = await Inventory.findByPk(inventoryId);
-        if (!inventory) {
-            res.status(404).json({ error: 'Inventory not found' });
-        } else {
-            await inventory.destroy();
-            res.status(200).json({ message: `Inventory with Id: ${inventoryId} deleted` });
-    }} catch (err) {
-        console.error(`Error while deleting inventory: ${err}`);
-        res.status(500).json({ error: err });
-    }
+  try {
+    const inventoryId = parseInt(req.params.id, 10);
+    const existingInventory = await getEntityById(Inventory, inventoryId);
+    existingInventory.destroy();
+    res.status(200).json({ message: `Inventory with id ${inventoryId} deleted` })
+  } catch (err) {
+    handleError(err, res);
+  }
 }
 
 async function update(req: Request, res: Response) {
-    try {
-        const inventoryId = req.params.id;
-        const existingInventory = await Inventory.findByPk(inventoryId);
-        const inventory = plainToInstance(UpdateInventory, req.body);
-        await validateOrReject(inventory);
-        if (!existingInventory) {
-            res.status(404).json({ error: 'Inventory not found' });
-        } else {
-            await existingInventory.update({
-                ...inventory,
-            });
-            res.status(200).json({ message: `Inventory with Id: ${inventoryId} updated` });
-    }} catch (err) {
-        if (isValidationError(err)) {
-            res.status(400).send({ error: 'Validation error', details: err });
-        } else {
-            console.error(`Error while updating inventory: ${err}`);
-            res.status(500).json({ error: err });
-        }
-    }
+  try {
+    const inventoryId = parseInt(req.params.id);
+    const existingInventory = await getEntityById(Inventory, inventoryId);
+    const inventory = plainToInstance(UpdateInventory, req.body);
+    await validateInstance(inventory);
+    await ensureExists(Product, inventory.productId);
+    const updatedInventory = await existingInventory.update(inventory);
+    res.status(200).send(updatedInventory)
+  } catch(err) {
+    handleError(err, res);
+  }
 }
 
 export { get, create, remove, update };
