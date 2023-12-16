@@ -9,9 +9,16 @@ export function isValidationError(err: any): err is ValidationError[] {
 }
 
 export class EntityNotFoundError extends Error {
-  constructor(message?: string) {
-    super(message);
+  constructor(entity: string) {
+    super(`${entity} not found`);
     this.name = 'EntityNotFoundError';
+  }
+}
+
+export class RelationNotFoundError extends Error {
+  constructor(relation: string) {
+    super(`${relation} with ID not found`);
+    this.name = 'RelationNotFoundError';
   }
 }
 
@@ -29,6 +36,8 @@ export function handleError(err: any, res: Response) {
   } else if (isValidationError(err)) {
     res.status(400).send({ error: 'Validation error', details: err });
   } else if (err instanceof EntityNotFoundError) {
+    res.status(404).send({ error: `${err.message}` });
+  } else if (err instanceof RelationNotFoundError) {
     res.status(404).send({ error: `${err.message}` });
   } else {
     console.error('Error:', err);
