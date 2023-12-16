@@ -47,7 +47,7 @@ async function remove(req: Request, res: Response) {
     const orderId = parseInt(req.params.id, 10);
    const existingOrder = await getEntityById(Order, orderId);
     await existingOrder.destroy();
-    res.status(200).json({ message: `Order with ${orderId} deleted` });
+    res.status(200).json({ message: `Order with id ${orderId} deleted` });
   } catch (err) {
     handleError(err, res);
   }

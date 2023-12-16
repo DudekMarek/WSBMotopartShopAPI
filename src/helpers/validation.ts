@@ -17,7 +17,7 @@ export class EntityNotFoundError extends Error {
 
 export class RelationNotFoundError extends Error {
   constructor(relation: string) {
-    super(`${relation} with ID not found`);
+    super(`${relation} with provided ID not found`);
     this.name = 'RelationNotFoundError';
   }
 }
