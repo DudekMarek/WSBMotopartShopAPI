@@ -5,7 +5,7 @@ import {
   InferCreationAttributes,
   CreationOptional,
 } from "sequelize";
-import sequelize from "src/services/dbService";
+import sequelize from "../services/dbService";
 
 import Order from "./orderModel";
 import Product from "./productModel";
