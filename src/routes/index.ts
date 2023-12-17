@@ -8,6 +8,7 @@ import inventoryRouter from "./inventoryRoute";
 import orderItemsRouter from "./orderItemsRoute";
 import serviceOrderRouter from "./serviceOrderRoute";
 import servicePartsRouter from "./servicePartsRoute";
+import documentRouter from "./documentRoute";
 
 const router = express.Router();
 
@@ -20,5 +21,6 @@ router.use("/inventories", inventoryRouter);
 router.use("/order-items", orderItemsRouter);
 router.use("/service-orders", serviceOrderRouter);
 router.use("/service-parts", servicePartsRouter);
+router.use("/documents", documentRouter);
 
 export default router;
