@@ -9,6 +9,7 @@ import { ensureExists, getEntityById } from "../services/relationService";
 import { validateInstance, handleError } from "../helpers/validation";
 import Order from "src/models/orderModel";
 import { order } from "src/models";
+import moment from "moment";
 
 async function get(req: Request, res: Response) {
   try {
@@ -21,6 +22,9 @@ async function get(req: Request, res: Response) {
 
 async function create(req: Request, res: Response) {
   try {
+    if(typeof req.body.serviceDate === "string"){
+      req.body.serviceDate = moment(req.body.serviceDate, "YYYY-MM-DD").toDate()
+    }
     const serviceOrder = plainToInstance(CreateServiceOrder, req.body);
     await validateInstance(serviceOrder);
     const createdServiceOrder = await ServiceOrder.create({ ...serviceOrder });
@@ -32,6 +36,9 @@ async function create(req: Request, res: Response) {
 
 async function update(req: Request, res: Response) {
   try {
+    if(typeof req.body.serviceDate === "string"){
+      req.body.serviceDate = moment(req.body.serviceDate, "YYYY-MM-DD").toDate()
+    }
     const serviceOrderId = parseInt(req.params.id, 10);
     const existigServiceOrder = await getEntityById(
       ServiceOrder,
