@@ -9,6 +9,7 @@ import {
 import { plainToInstance } from "class-transformer";
 import { ensureExists, getEntityById } from "../services/relationService";
 import { validateInstance, handleError } from "../helpers/validation";
+import moment from "moment/moment";
 
 async function get(req: Request, res: Response) {
   try {
@@ -21,6 +22,12 @@ async function get(req: Request, res: Response) {
 
 async function create(req: Request, res: Response) {
   try {
+    if(typeof req.body.updatedAt === "string"){
+      req.body.updatedAt = moment(req.body.updatedAt, "YYYY-MM-DD").toDate()
+    }
+    if(typeof req.body.createdAt === "string"){
+      req.body.createdAt = moment(req.body.createdAt, "YYYY-MM-DD").toDate()
+    }
     const serviceParts = plainToInstance(CreateServiceParts, req.body);
     await validateInstance(serviceParts);
 
@@ -36,6 +43,12 @@ async function create(req: Request, res: Response) {
 
 async function update(req: Request, res: Response) {
   try {
+    if(typeof req.body.updatedAt === "string"){
+      req.body.updatedAt = moment(req.body.updatedAt, "YYYY-MM-DD").toDate()
+    }
+    if(typeof req.body.createdAt === "string"){
+      req.body.createdAt = moment(req.body.createdAt, "YYYY-MM-DD").toDate()
+    }
     const servicePartsId = parseInt(req.params.id, 10);
     const existingServiceParts = await getEntityById(
       ServiceOrder,
